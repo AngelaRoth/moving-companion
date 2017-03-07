@@ -13,9 +13,10 @@ function loadData() {
 
   var street = $('#street').val();
   var city = $('#city').val();
+  var address = street + ', ' + city;
+  var imgTag = '<img class="bgimg" src="http://maps.googleapis.com/maps/api/streetview?size=600x300&location=' + address + '">';
 
-  var imgTag = '<img class="bgimg" src="http://maps.googleapis.com/maps/api/streetview?size=600x300&location=' + street + ', ' + city + '">';
-
+  $greeting.text(address);
   $body.append(imgTag);
 
   return false;
