@@ -98,6 +98,8 @@ function loadData() {
         $wikiElem.append(fullString);
       }
     }
+  }).fail(function() {
+    $wikiElem.append("Wikipedia Not Responding");
   });
 
   return false;
