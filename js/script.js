@@ -65,14 +65,40 @@ function loadData() {
 // WIKIPEDIA CODE
   var streetForURL = street.replace(' ', '%20').replace('.', '').replace(',', '');
   var cityForURL = city.replace(' ', '%20').replace('.', '').replace(',', '');
-  var wikiURL = 'https://en.wikipedia.org/w/api.php?action=query&titles=' + streetForURL +'|' + cityForURL + '&prop=revisions&rvprop=content&format=json';
+  // action=opensearch
+  // search=[our string]
+  // callback=wikiCallback
+  var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + cityForURL + '&format=json&callback=wikiCallback';
 
-  $.ajax( wikiURL, dataType:json, success:displayWiki(data));
-
-  function displayWiki(data) {
-    console.log('Wiki' + data);
-  }
-
+  // Arguement is an OBJECT of key/value pairs (inside {})
+  // url: wikiURL  [CAN also be a string before {}.  i.e. $.ajax(wikiURL, {})]
+  // dataType: 'jsonp' (NOT json) (name is a STRING inside quotes)
+  // success: function(response) {}
+  $.ajax({
+    url: wikiURL,
+    dataType: 'jsonp',
+    // NOTE: Some APIs want to use a different name for the callback function
+    //       By default, using jsonp as the dataType will set the callback
+    //       function name to callback (so following line is redundant).
+    //       But if the "callback" in our URL was called something else,
+    //       we would have to specify it here:
+    // jsonp: "callback",
+    headers: {'Api-User-Agent': 'MovingCompanion/1.0 (https://angelaroth.github.io/moving-companion/)'},
+    success: function(data) {
+      // NOTE: If we look in DevTools Network, and click on the
+      // api.php?action..., in the Preview we we will see the callback
+      // of this event. Notice that it as an ARRAY; the second item
+      // is an array of articles; and the fourth is an array of URLs.
+      var articles = data[1];
+      var artLinks = data[3];
+      var numArticles = articles.length;
+      for (var i = 0; i < numArticles; i++) {
+        var artString = '<a href="' + artLinks[i] + '">' + articles[i] + '</a>';
+        var fullString = '<li class="article">' + artString + '</li>';
+        $wikiElem.append(fullString);
+      }
+    }
+  });
 
   return false;
 };
