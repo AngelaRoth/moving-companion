@@ -11,7 +11,7 @@ function loadData() {
   $wikiElem.text("");
   $nytElem.text("");
 
-  // STREETVIEW CODE
+// STREETVIEW CODE
   var street = $('#street').val();
   var city = $('#city').val();
   var address = street + ', ' + city;
@@ -20,7 +20,7 @@ function loadData() {
   $greeting.text(address);
   $body.append(imgTag);
 
-  // NYT CODE
+// NYT CODE
   var nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 
   nytURL += '?' + $.param({
@@ -58,8 +58,21 @@ function loadData() {
       });
     })
     .fail(function() {
-      $nytHeaderElem.text("No NYT Articles Available");
+      $nytHeaderElem.text("NYT Articles Currently Unavailable");
     });
+
+
+// WIKIPEDIA CODE
+  var streetForURL = street.replace(' ', '%20').replace('.', '').replace(',', '');
+  var cityForURL = city.replace(' ', '%20').replace('.', '').replace(',', '');
+  var wikiURL = 'https://en.wikipedia.org/w/api.php?action=query&titles=' + streetForURL +'|' + cityForURL + '&prop=revisions&rvprop=content&format=json';
+
+  $.ajax( wikiURL, dataType:json, success:displayWiki(data));
+
+  function displayWiki(data) {
+    console.log('Wiki' + data);
+  }
+
 
   return false;
 };
