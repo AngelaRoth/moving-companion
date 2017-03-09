@@ -84,22 +84,23 @@ function loadData() {
     //       we would have to specify it here:
     // jsonp: "callback",
     headers: {'Api-User-Agent': 'MovingCompanion/1.0 (https://angelaroth.github.io/moving-companion/)'},
-    success: function(data) {
-      // NOTE: If we look in DevTools Network, and click on the
-      // api.php?action..., in the Preview we we will see the callback
-      // of this event. Notice that it as an ARRAY; the second item
-      // is an array of articles; and the fourth is an array of URLs.
-      var articles = data[1];
-      var artLinks = data[3];
-      var numArticles = articles.length;
-      for (var i = 0; i < numArticles; i++) {
-        var artString = '<a href="' + artLinks[i] + '">' + articles[i] + '</a>';
-        var fullString = '<li class="article">' + artString + '</li>';
-        $wikiElem.append(fullString);
-      }
+  })
+  .done(function(data) {
+    // NOTE: If we look in DevTools Network, and click on the
+    // api.php?action..., in the Preview we we will see the callback
+    // of this event. Notice that it as an ARRAY; the second item
+    // is an array of articles; and the fourth is an array of URLs.
+    var articles = data[1];
+    var artLinks = data[3];
+    var numArticles = articles.length;
+    for (var i = 0; i < numArticles; i++) {
+      var artString = '<a href="' + artLinks[i] + '">' + articles[i] + '</a>';
+      var fullString = '<li class="article">' + artString + '</li>';
+      $wikiElem.append(fullString);
     }
-  }).fail(function() {
-    $wikiElem.append("Wikipedia Not Responding");
+  })
+  .fail(function() {
+    $wikiElem.append('Wikipedia not Responding');
   });
 
   return false;
