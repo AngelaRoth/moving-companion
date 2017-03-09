@@ -11,6 +11,7 @@ function loadData() {
   $wikiElem.text("");
   $nytElem.text("");
 
+  // STREETVIEW CODE
   var street = $('#street').val();
   var city = $('#city').val();
   var address = street + ', ' + city;
@@ -19,6 +20,7 @@ function loadData() {
   $greeting.text(address);
   $body.append(imgTag);
 
+  // NYT CODE
   var nytURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
 
   nytURL += '?' + $.param({
@@ -28,6 +30,9 @@ function loadData() {
   });
 
   console.log(nytURL);
+  // NOTE: If you want to see the JSON which the URL
+  // returns, just paste the URL into the browser
+  // address line.
 
   $.getJSON( nytURL, function( data ) {
     // 1st, log data to see how it's structured.
@@ -45,31 +50,13 @@ function loadData() {
       var artURL = art.web_url;
       var headString = '<a href="' + artURL + '">' + headline + '</a>';
       var snippetString = '<p>' + snippet + '</p>';
-      var fullString = '<li>' + headString + snippetString + '</li>';
+      var fullString = '<li class="article">' + headString + snippetString + '</li>';
       $nytElem.append(fullString);
     });
 
   });
 
-
-
-/*
-  $.getJSON( nytURL, function( data ) {
-    $.each( data, function( key, val ) {
-      if (key === "docs") {
-        key.forEach(function(val) {
-          var headline = val.headline.main;
-          var lead = val.lead_paragraph;
-          var headlineString = "<h2>" + headline + "</h2>";
-          var leadString = "<p>" + lead + "</p>";
-          $nytElem.append(headlineString);
-          $nytElem.append(leadString);
-        });
-      }
-    });
-  });
-
-*/  return false;
+  return false;
 };
 
 $('#form-container').submit(loadData);
